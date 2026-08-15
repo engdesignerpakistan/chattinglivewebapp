@@ -1,0 +1,60 @@
+Chatting Live
+│
+├── index.html
+├── login.html
+├── signup.html
+├── profile.html
+├── chat.html
+├── group.html
+├── settings.html
+├── admin/
+├── assets/
+│   ├── css/
+│   ├── js/
+│   ├── icons/
+│   ├── images/
+│
+├── supabase/
+├── api/
+└── database/
+
+
+
+
+supabase/
+│
+├── config.js
+├── auth.js
+├── database.js
+├── storage.js
+├── realtime.js
+└── functions.js
+
+
+<a href="index.html">Home</a>
+<a href="login.html">Login</a>
+<a href="signup.html">Sign Up</a>
+<a href="chat.html">Chat</a>
+<a href="group.html">Groups</a>
+<a href="profile.html">Profile</a>
+<a href="content.html">Content</a>
+<a href="settings.html">Settings</a>
+<a href="socials.html">Socials</a>
+
+
+database/
+│
+├── users.js
+├── profiles.js
+├── messages.js
+├── groups.js
+├── group_members.js
+├── group_messages.js
+├── friend_requests.js
+├── friends.js
+├── calls.js
+├── notifications.js
+├── status.js
+├── media.js
+├── reports.js
+└── settings.js
