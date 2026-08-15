@@ -1,0 +1,12 @@
+auth/
+│
+├── signup.js
+├── login.js
+├── logout.js
+├── forgot-password.js
+├── reset-password.js
+├── verify-email.js
+├── session.js
+└── auth-guard.js
+
+
