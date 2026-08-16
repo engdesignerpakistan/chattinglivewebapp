@@ -1,3 +1,8 @@
+NEXT_PUBLIC_SUPABASE_URL=https://jfbhkuczihyvsprgezlq.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_o-HXxVkYJ37i-KQHLVlA9w_ju2l9sCt
+
+
+
 Chatting Live
 │
 ├── index.html
