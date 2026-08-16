@@ -5,6 +5,7 @@
 // 1. Supabase Initialization
 const SUPABASE_URL = 'https://jfbhkuczihyvsprgezlq.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_o-HXxVkYJ37i-KQHLVlA9w_ju2l9sCt';
+
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -60,7 +61,7 @@ function setupForms() {
       } else {
         alert("Login successful!");
         console.log("User logged in:", data);
-        // window.location.href = "home.html";
+        window.location.href = "home.html";
       }
     });
   }
@@ -70,6 +71,7 @@ function setupForms() {
     signupForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
+      const fullName = document.getElementById("fullname")?.value;
       const email = document.getElementById("email")?.value;
       const password = document.getElementById("password")?.value;
 
@@ -81,15 +83,19 @@ function setupForms() {
       const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
+        options: {
+          data: {
+            full_name: fullName
+          }
+        }
       });
 
       if (error) {
         alert("Signup failed: " + error.message);
       } else {
-        alert("Signup successful! Check your email for confirmation.");
+        alert("Signup successful!");
         console.log("User data:", data);
-         window.location.href = "login.html";
-         
+        window.location.href = "login.html";
       }
     });
   }
@@ -124,7 +130,7 @@ async function logoutUser() {
     alert("Error logging out: " + error.message);
   } else {
     alert("Logged out successfully!");
-    // window.location.href = "login.html";
+    window.location.href = "login.html";
   }
 }
 
