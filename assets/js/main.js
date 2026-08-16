@@ -88,6 +88,8 @@ function setupForms() {
       } else {
         alert("Signup successful! Check your email for confirmation.");
         console.log("User data:", data);
+         window.location.href = "login.html";
+         
       }
     });
   }
