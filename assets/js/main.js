@@ -1,178 +1,611 @@
+```javascript
 /* ==========================================
    Chatting Live - Main JavaScript
    ========================================== */
 
-// 1. Supabase Initialization
-const SUPABASE_URL = 'https://jfbhkuczihyvsprgezlq.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_o-HXxVkYJ37i-KQHLVlA9w_ju2l9sCt';
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Chatting Live Loaded Successfully");
-    initializeApp();
-});
 
 /* ==========================================
-   Initialize
+   1. Supabase Configuration
    ========================================== */
-function initializeApp() {
-    setupNavigation();
-    setupForms();
-    setupTheme();
-    setupChat();
-}
+
+const SUPABASE_URL =
+    "https://jfbhkuczihyvsprgezlq.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "YOUR_PUBLISHABLE_KEY";
+
+const supabase =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
 
 /* ==========================================
-   Navigation
+   2. App Start
    ========================================== */
-function setupNavigation() {
-    console.log("Navigation Ready");
-}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        console.log(
+            "Chatting Live Loaded Successfully"
+        );
+
+        setupForms();
+        setupTheme();
+        setupChat();
+        checkUserSession();
+
+    }
+);
+
 
 /* ==========================================
-   Forms
+   3. Login / Sign Up
    ========================================== */
+
 function setupForms() {
-    const loginForm = document.getElementById("loginForm");
-    const signupForm = document.getElementById("signupForm");
-    const profileForm = document.getElementById("profileForm");
 
-    // 1. Supabase Log In Logic
+    const loginForm =
+        document.getElementById("loginForm");
+
+    const signupForm =
+        document.getElementById("signupForm");
+
+    const profileForm =
+        document.getElementById("profileForm");
+
+
+    /* ======================================
+       LOGIN
+       ====================================== */
+
     if (loginForm) {
-        loginForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const email = document.getElementById("email")?.value;
-            const password = document.getElementById("password")?.value;
 
-            if (!email || !password) {
-                alert("Please enter both email and password.");
-                return;
-            }
+        loginForm.addEventListener(
+            "submit",
+            async function (e) {
 
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
+                e.preventDefault();
 
-            if (error) {
-                alert("Login failed: " + error.message);
-            } else {
-                alert("Login successful!");
-                console.log("User logged in:", data);
-                window.location.href = "home.html";
-            }
-        });
-    }
+                const email =
+                    document
+                    .getElementById("email")
+                    ?.value
+                    .trim();
 
-    // 2. Supabase Sign Up Logic
-    if (signupForm) {
-        signupForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const fullName = document.getElementById("fullname")?.value;
-            const email = document.getElementById("email")?.value;
-            const password = document.getElementById("password")?.value;
+                const password =
+                    document
+                    .getElementById("password")
+                    ?.value;
 
-            if (!email || !password) {
-                alert("Please enter both email and password.");
-                return;
-            }
 
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-                options: {
-                    data: { full_name: fullName }
+                if (!email || !password) {
+
+                    alert(
+                        "براہ کرم ای میل اور پاس ورڈ درج کریں۔"
+                    );
+
+                    return;
                 }
-            });
 
-            if (error) {
-                alert("Signup failed: " + error.message);
-            } else {
-                alert("Signup successful! Please check your email for confirmation if required.");
-                console.log("User data:", data);
-                window.location.href = "login.html";
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabase.auth
+                    .signInWithPassword({
+
+                        email: email,
+
+                        password: password
+
+                    });
+
+
+                if (error) {
+
+                    alert(
+                        "لاگ اِن نہیں ہوا: "
+                        + error.message
+                    );
+
+                    console.error(error);
+
+                    return;
+                }
+
+
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(data.user)
+                );
+
+
+                alert(
+                    "لاگ اِن کامیاب ہو گیا۔"
+                );
+
+
+                window.location.href =
+                    "home.html";
+
             }
-        });
+        );
+
     }
 
-    // 3. Supabase Profile Update Logic
+
+    /* ======================================
+       SIGN UP
+       ====================================== */
+
+    if (signupForm) {
+
+        signupForm.addEventListener(
+            "submit",
+            async function (e) {
+
+                e.preventDefault();
+
+
+                const fullName =
+                    document
+                    .getElementById("fullname")
+                    ?.value
+                    .trim();
+
+
+                const username =
+                    document
+                    .getElementById("username")
+                    ?.value
+                    .trim();
+
+
+                const email =
+                    document
+                    .getElementById("email")
+                    ?.value
+                    .trim();
+
+
+                const password =
+                    document
+                    .getElementById("password")
+                    ?.value;
+
+
+                const confirmPassword =
+                    document
+                    .getElementById("confirmPassword")
+                    ?.value;
+
+
+                /* Check fields */
+
+                if (
+                    !fullName ||
+                    !username ||
+                    !email ||
+                    !password ||
+                    !confirmPassword
+                ) {
+
+                    alert(
+                        "براہ کرم تمام خانے مکمل کریں۔"
+                    );
+
+                    return;
+                }
+
+
+                /* Check passwords */
+
+                if (
+                    password !==
+                    confirmPassword
+                ) {
+
+                    alert(
+                        "دونوں پاس ورڈ ایک جیسے نہیں ہیں۔"
+                    );
+
+                    return;
+                }
+
+
+                /* Minimum password */
+
+                if (password.length < 6) {
+
+                    alert(
+                        "پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے۔"
+                    );
+
+                    return;
+                }
+
+
+                /* =================================
+                   Create Supabase Auth Account
+                   ================================= */
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabase.auth
+                    .signUp({
+
+                        email: email,
+
+                        password: password,
+
+                        options: {
+
+                            data: {
+
+                                full_name:
+                                    fullName,
+
+                                username:
+                                    username
+
+                            }
+
+                        }
+
+                    });
+
+
+                if (error) {
+
+                    alert(
+                        "سائن اَپ نہیں ہوا: "
+                        + error.message
+                    );
+
+                    console.error(error);
+
+                    return;
+                }
+
+
+                /* =================================
+                   Save User Information
+                   ================================= */
+
+                if (data.user) {
+
+                    const {
+                        error:
+                        profileError
+                    } =
+                        await supabase
+                        .from("Sign Up")
+                        .insert({
+
+                            fullname:
+                                fullName,
+
+                            username:
+                                username,
+
+                            email:
+                                email
+
+                        });
+
+
+                    if (profileError) {
+
+                        console.error(
+                            "Profile Save Error:",
+                            profileError
+                        );
+
+                        alert(
+                            "اکاؤنٹ بن گیا، لیکن پروفائل کی معلومات محفوظ نہیں ہو سکیں۔"
+                        );
+
+                        return;
+                    }
+
+                }
+
+
+                /* =================================
+                   Success
+                   ================================= */
+
+                alert(
+                    "آپ کا اکاؤنٹ کامیابی سے بن گیا۔"
+                );
+
+
+                window.location.href =
+                    "login.html";
+
+            }
+        );
+
+    }
+
+
+    /* ======================================
+       PROFILE
+       ====================================== */
+
     if (profileForm) {
-        profileForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const fullName = document.getElementById("fullName")?.value;
 
-            const { data, error } = await supabase.auth.updateUser({
-                data: { full_name: fullName }
-            });
+        profileForm.addEventListener(
+            "submit",
+            async function (e) {
 
-            if (error) {
-                alert("Error updating profile: " + error.message);
-            } else {
-                alert("Profile updated successfully!");
-                console.log("Updated user data:", data);
+                e.preventDefault();
+
+
+                const fullName =
+                    document
+                    .getElementById("fullName")
+                    ?.value
+                    .trim();
+
+
+                if (!fullName) {
+
+                    alert(
+                        "براہ کرم اپنا نام درج کریں۔"
+                    );
+
+                    return;
+                }
+
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabase.auth
+                    .updateUser({
+
+                        data: {
+
+                            full_name:
+                                fullName
+
+                        }
+
+                    });
+
+
+                if (error) {
+
+                    alert(
+                        "پروفائل اپڈیٹ نہیں ہوا: "
+                        + error.message
+                    );
+
+                    return;
+                }
+
+
+                alert(
+                    "پروفائل کامیابی سے اپڈیٹ ہو گیا۔"
+                );
+
+                console.log(data);
+
             }
-        });
+        );
+
     }
+
 }
 
+
 /* ==========================================
-   4. Logout Functionality
+   4. Check User Session
    ========================================== */
+
+async function checkUserSession() {
+
+    const {
+        data
+    } =
+        await supabase.auth
+        .getSession();
+
+
+    if (data.session) {
+
+        localStorage.setItem(
+            "user",
+            JSON.stringify(
+                data.session.user
+            )
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   5. Logout
+   ========================================== */
+
 async function logoutUser() {
-    const { error } = await supabase.auth.signOut();
+
+    const {
+        error
+    } =
+        await supabase.auth
+        .signOut();
+
+
     if (error) {
-        alert("Error logging out: " + error.message);
-    } else {
-        alert("Logged out successfully!");
-        window.location.href = "login.html";
+
+        alert(
+            "لاگ آؤٹ نہیں ہوا: "
+            + error.message
+        );
+
+        return;
     }
+
+
+    localStorage.removeItem(
+        "user"
+    );
+
+
+    localStorage.removeItem(
+        "token"
+    );
+
+
+    window.location.href =
+        "index.html";
+
 }
 
+
 /* ==========================================
-   Theme
+   6. Theme
    ========================================== */
+
 function setupTheme() {
-    console.log("Theme Ready");
+
+    console.log(
+        "Theme Ready"
+    );
+
 }
 
+
 /* ==========================================
-   Chat
+   7. Chat
    ========================================== */
+
 function setupChat() {
-    const sendBtn = document.getElementById("sendBtn");
+
+    const sendBtn =
+        document.getElementById(
+            "sendBtn"
+        );
+
+
     if (sendBtn) {
-        sendBtn.addEventListener("click", sendMessage);
+
+        sendBtn.addEventListener(
+            "click",
+            sendMessage
+        );
+
     }
+
 }
+
+
+/* ==========================================
+   8. Send Message
+   ========================================== */
 
 function sendMessage() {
-    const input = document.getElementById("message");
-    const messages = document.getElementById("messages");
 
-    if (!input || !messages) return;
-    if (input.value.trim() === "") return;
+    const input =
+        document.getElementById(
+            "message"
+        );
 
-    const div = document.createElement("div");
-    div.className = "message";
-    div.innerHTML = input.value;
-    messages.appendChild(div);
 
-    input.value = "";
-    messages.scrollTop = messages.scrollHeight;
+    const messages =
+        document.getElementById(
+            "messages"
+        );
+
+
+    if (!input || !messages) {
+
+        return;
+    }
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        return;
+    }
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.className =
+        "message";
+
+
+    div.textContent =
+        text;
+
+
+    messages.appendChild(
+        div
+    );
+
+
+    input.value =
+        "";
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
 }
+
 
 /* ==========================================
-   Utilities
+   9. Notifications
    ========================================== */
-function showNotification(text) {
+
+function showNotification(
+    text
+) {
+
     alert(text);
+
 }
+
+
+/* ==========================================
+   10. Loader
+   ========================================== */
 
 function showLoader() {
-    console.log("Loading...");
+
+    console.log(
+        "Loading..."
+    );
+
 }
 
+
 function hideLoader() {
-    console.log("Finished");
+
+    console.log(
+        "Finished"
+    );
+
 }
+```
