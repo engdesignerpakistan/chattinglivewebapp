@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Sign Up | Chatting Live</title>
+
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="icon" href="assets/icons/favicon.png">
-    <!-- Supabase JS CDN Library -->
+
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
 
 <header>
@@ -20,23 +24,60 @@
 
 <main>
     <div class="signup-container">
+
         <h1>Create Account</h1>
+
         <form id="signupForm">
-            <input type="text" id="fullname" placeholder="Full Name" required>
-            <input type="text" id="username" placeholder="Username" required>
-            <input type="email" id="email" placeholder="Email Address" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-            <button type="submit">Create Account</button>
+
+            <input
+                type="text"
+                id="fullname"
+                placeholder="Full Name"
+                required
+            >
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Username"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+            >
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                required
+            >
+
+            <button type="submit">
+                Create Account
+            </button>
+
         </form>
+
         <p>
-            Already have an account?
+            پہلے سے اکاؤنٹ ہے؟
             <a href="login.html">Login</a>
         </p>
+
     </div>
 </main>
 
-<!-- Main JS File -->
 <script src="assets/js/main.js"></script>
 
 </body>
